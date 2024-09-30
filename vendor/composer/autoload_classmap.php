@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
     'PHPUnit\\Event\\Application\\Finished' => $vendorDir . '/phpunit/phpunit/src/Event/Events/Application/Finished.php',
     'PHPUnit\\Event\\Application\\FinishedSubscriber' => $vendorDir . '/phpunit/phpunit/src/Event/Events/Application/FinishedSubscriber.php',
     'PHPUnit\\Event\\Application\\Started' => $vendorDir . '/phpunit/phpunit/src/Event/Events/Application/Started.php',
@@ -1177,4 +1178,5 @@ return array(
     'TheSeer\\Tokenizer\\XMLSerializer' => $vendorDir . '/theseer/tokenizer/src/XMLSerializer.php',
     'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
     'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+    '©' => $vendorDir . '/symfony/cache/Traits/ValueWrapper.php',
 );
