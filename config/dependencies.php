@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Api\SplitPagApi;
 use App\Service\AuthenticationService;
 use App\Service\ClientService;
+use App\Service\ChargeService;
 use App\Service\WebhookProcessor;
 use GuzzleHttp\Client as HttpClient;
 use Monolog\Handler\StreamHandler;
@@ -31,6 +32,13 @@ return [
 
     ClientService::class => function (ContainerInterface $c) {
         return new ClientService(
+            $c->get(SplitpagApi::class),
+            $c->get(Logger::class)
+        );
+    },
+
+    ChargeService::class => function (ContainerInterface $c) {
+        return new ChargeService(
             $c->get(SplitpagApi::class),
             $c->get(Logger::class)
         );
