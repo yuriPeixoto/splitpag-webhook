@@ -2,28 +2,36 @@
 
 declare(strict_types=1);
 
-use App\Api\SplitPagClient;
+use App\Api\SplitPagApi;
+use App\Service\AuthenticationService;
+use App\Service\WebhookProcessor;
 use GuzzleHttp\Client as HttpClient;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use Psr\Log\LoggerInterface;
 
 return [
-    LoggerInterface::class => function (ContainerInterface $c) {
+    Logger::class => function (ContainerInterface $c) {
         $logger = new Logger('app');
         $logger->pushHandler(new StreamHandler(__DIR__ . '/../var/logs/app.log', Logger::DEBUG));
         return $logger;
     },
 
-    HttpClient::class => function (ContainerInterface $c) {
-        return new HttpClient();
+    AuthenticationService::class => function (ContainerInterface $c) {
+        return new AuthenticationService($c->get(Logger::class));
     },
 
-    SplitPagClient::class => function (ContainerInterface $c) {
-        return new SplitPagClient(
-            $c->get(HttpClient::class),
-            $_ENV['SPLITPAG_API_URL']
+    SplitpagApi::class => function (ContainerInterface $c) {
+        return new SplitpagApi(
+            $c->get(Logger::class),
+            $c->get(AuthenticationService::class)
+        );
+    },
+
+    WebhookProcessor::class => function (ContainerInterface $c) {
+        return new WebhookProcessor(
+            $c->get(SplitpagApi::class),
+            $c->get(Logger::class)
         );
     },
 ];
