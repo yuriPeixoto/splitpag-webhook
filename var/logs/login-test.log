@@ -1,0 +1,5 @@
+[2024-09-30T19:45:20.965229+00:00] login-test.ERROR: Authentication failed: cURL error 60: SSL certificate problem: unable to get local issuer certificate (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://empresa.sandbox.splitpag.com.br/api/v1/login [] []
+[2024-09-30T19:45:20.968502+00:00] login-test.ERROR: Login failed: Failed to authenticate with Splitpag API [] []
+[2024-09-30T19:46:32.112023+00:00] login-test.ERROR: Authentication failed: cURL error 60: SSL certificate problem: unable to get local issuer certificate (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for https://empresa.sandbox.splitpag.com.br/api/v1/login [] []
+[2024-09-30T19:46:32.117951+00:00] login-test.ERROR: Login failed: Failed to authenticate with Splitpag API [] []
+[2024-09-30T19:50:50.988154+00:00] login-test.INFO: Login successful. Token received. [] []

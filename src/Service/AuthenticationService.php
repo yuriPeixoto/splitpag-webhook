@@ -18,11 +18,15 @@ class AuthenticationService
 
     public function __construct(LoggerInterface $logger)
     {
-        $this->client   = new Client();
         $this->logger   = $logger;
         $this->apiUrl   = $_ENV['SPLITPAG_API_URL'];
         $this->email    = $_ENV['SPLITPAG_EMAIL'];
         $this->password = $_ENV['SPLITPAG_PASSWORD'];
+    }
+
+    protected function createHttpClient(): Client
+    {
+        return new Client(['verify' => false]);
     }
 
     public function getToken(): string
@@ -38,7 +42,8 @@ class AuthenticationService
     private function login(): void
     {
         try {
-            $response = $this->client->post($this->apiUrl . '/login', [
+            $client = $this->createHttpClient();
+            $response = $client->post($this->apiUrl . '/login', [
                 'json' => [
                     'email'    => $this->email,
                     'password' => $this->password,

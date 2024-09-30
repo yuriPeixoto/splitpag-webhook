@@ -1,0 +1,1 @@
+{"version":1,"defects":[],"times":{"Tests\\Unit\\Service\\AuthenticationServiceTest::testFailedLogin":0.005,"Tests\\Unit\\Service\\AuthenticationServiceTest::testSucessfulLogin":0.021}}
