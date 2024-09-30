@@ -18,7 +18,7 @@ class SplitpagApi
 
     public function __construct(LoggerInterface $logger, AuthenticationService $authService)
     {
-        $this->client = new Client();
+        $this->client = new Client(['verify' => false]);
         $this->logger = $logger;
         $this->authService = $authService;
         $this->apiUrl = $_ENV['SPLITPAG_API_URL'];
@@ -29,14 +29,21 @@ class SplitpagApi
         $token = $this->authService->getToken();
 
         try {
-            $response = $this->client->request($method, $this->apiUrl . $endpoint, [
-                'json' => $data,
+            $options = [
                 'headers' => [
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                     'Authorization' => 'Bearer ' . $token,
                 ],
-            ]);
+            ];
+
+            if ($method === 'GET') {
+                $options['query'] = $data;
+            } else {
+                $options['json'] = $data;
+            }
+
+            $response = $this->client->request($method, $this->apiUrl . $endpoint, $options);
 
             return json_decode((string) $response->getBody(), true);
         } catch (Exception $e) {
