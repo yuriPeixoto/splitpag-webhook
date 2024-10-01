@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Api\SplitPagApi;
+use App\Service\AuditService;
 use App\Service\AuthenticationService;
 use App\Service\ClientService;
 use App\Service\ChargeService;
@@ -48,7 +49,14 @@ return [
     PaymentService::class => function (ContainerInterface $c) {
         return new PaymentService(
             $c->get(SplitpagApi::class),
-            $c->get(LoggerInterface::class)
+            $c->get(Logger::class)
+        );
+    },
+
+    AuditService::class => function (ContainerInterface $c) {
+        return new AuditService(
+            $c->get(SplitpagApi::class),
+            $c->get(Logger::class)
         );
     },
 

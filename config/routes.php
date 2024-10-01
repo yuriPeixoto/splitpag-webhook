@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controller\AuditController;
 use App\Controller\ClientController;
 use App\Controller\ChargeController;
 use App\Controller\PaymentController;
@@ -22,4 +23,7 @@ return function (App $app) {
     // Payment routes
     $app->get('/payment', [PaymentController::class, 'getPayments']);
     $app->get('/payment/checkStatusPayment', [PaymentController::class, 'checkStatusPayment']);
+
+    // Audit route
+    $app->get('/audit', [AuditController::class, 'getAudits']);
 };
