@@ -19,10 +19,18 @@ class ChargeService
     public function getCharges(string $page, string $search = '', string $from = '', string $to = '', string $status = ''): array
     {
         $params = ['page' => $page];
-        if (!empty($search)) $params['search'] = $search;
-        if (!empty($from)) $params['from'] = $from;
-        if (!empty($to)) $params['to'] = $to;
-        if (!empty($status)) $params['status'] = $status;
+        if (!empty($search)) {
+            $params['search'] = $search;
+        }
+        if (!empty($from)) {
+            $params['from'] = $from;
+        }
+        if (!empty($to)) {
+            $params['to'] = $to;
+        }
+        if (!empty($status)) {
+            $params['status'] = $status;
+        }
 
         return $this->api->makeRequest('GET', '/charge', $params);
     }

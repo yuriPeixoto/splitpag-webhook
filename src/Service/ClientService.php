@@ -12,7 +12,7 @@ class ClientService
 
     public function __construct(SplitpagApi $api, LoggerInterface $logger)
     {
-        $this->api = $api;
+        $this->api    = $api;
         $this->logger = $logger;
     }
 
