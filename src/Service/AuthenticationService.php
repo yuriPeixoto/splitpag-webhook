@@ -93,9 +93,16 @@ class AuthenticationService
             } else {
                 throw new AuthenticationException('Invalid response from SplitPag API');
             }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $context = [
+                'request' => $e->getRequest(),
+                'response' => $e->hasResponse() ? $e->getResponse() : null,
+            ];
+            $this->logger->error('Authentication failed: ' . $e->getMessage(), $context);
+            throw new AuthenticationException('Failed to authenticate with Splitpag API', 0, $e, $context);
         } catch (\Exception $e) {
             $this->logger->error('Authentication failed: ' . $e->getMessage());
-            throw new AuthenticationException('Failed to authenticate with Splitpag API');
+            throw new AuthenticationException('Unexpected error during authentication', 0, $e);
         }
     }
 }

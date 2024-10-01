@@ -28,7 +28,21 @@ class ClientService
 
     public function createClient(array $data): array
     {
-        $requiredFields = ['document', 'name', 'email', 'gender', 'birth_date', 'address', 'number_address', 'district', 'city', 'state', 'country', 'phone'];
+        $requiredFields = [
+            'document',
+            'name',
+            'email',
+            'gender',
+            'birth_date',
+            'address',
+            'number_address',
+            'district',
+            'city',
+            'state',
+            'country',
+            'phone'
+        ];
+        
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 return ['success' => false, 'message' => "Field '$field' is required"];

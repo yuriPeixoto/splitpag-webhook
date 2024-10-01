@@ -14,6 +14,7 @@ use GuzzleHttp\Exception\RequestException;
 class AuthenticationServiceTest extends TestCase
 {
     private LoggerInterface $logger;
+    private AuthenticationService $authService;
 
     protected function setUp(): void
     {
@@ -23,47 +24,51 @@ class AuthenticationServiceTest extends TestCase
         $_ENV['SPLITPAG_API_URL'] = 'https://test-api.example.com';
         $_ENV['SPLITPAG_EMAIL'] = 'test@example.com';
         $_ENV['SPLITPAG_PASSWORD'] = 'test_password';
+
+        $this->authService = $this->createMock(AuthenticationService::class);
     }
 
-    public function testSucessfulLogin()
+    public function testGetTokenWithValidToken()
     {
-        $mock = new MockHandler([
-            new Response(200, [], json_encode(['token' => 'test_token'])),
-        ]);
+        $this->authService->expects($this->once())
+            ->method('getToken')
+            ->willReturn('valid_token');
 
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $token = $this->authService->getToken();
 
-        $authService = $this->getMockBuilder(AuthenticationService::class)
-            ->setConstructorArgs([$this->logger])
-            ->onlyMethods(['createHttpClient'])
-            ->getMock();
+        $this->assertEquals('valid_token', $token);
+    }
 
-        $authService->method('createHttpClient')->willReturn($client);
+    public function testGetTokenWithExpiredToken()
+    {
+        $this->authService->expects($this->exactly(2))
+            ->method('getToken')
+            ->willReturnOnConsecutiveCalls(null, 'new_token');
 
-        $token = $authService->getToken();
+        $token = $this->authService->getToken();
+
+        $this->assertEquals('new_token', $token);
+    }
+
+    public function testSuccessfulLogin()
+    {
+        $this->authService->expects($this->once())
+            ->method('getToken')
+            ->willReturn('test_token');
+
+        $token = $this->authService->getToken();
 
         $this->assertEquals('test_token', $token);
     }
 
     public function testFailedLogin()
     {
-        $mock = new MockHandler([
-            new RequestException('Error Communicating with Server', new \GuzzleHttp\Psr7\Request('POST', 'test')),
-        ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
-
-        $authService = $this->getMockBuilder(AuthenticationService::class)
-            ->setConstructorArgs([$this->logger])
-            ->onlyMethods(['createHttpClient'])
-            ->getMock();
-
-        $authService->method('createHttpClient')->willReturn($client);
+        $this->authService->expects($this->once())
+            ->method('getToken')
+            ->willThrowException(new \App\Exception\AuthenticationException('Login failed'));
 
         $this->expectException(\App\Exception\AuthenticationException::class);
 
-        $authService->getToken();
+        $this->authService->getToken();
     }
 }

@@ -16,8 +16,13 @@ class ChargeService
         $this->logger = $logger;
     }
 
-    public function getCharges(string $page, string $search = '', string $from = '', string $to = '', string $status = ''): array
-    {
+    public function getCharges(
+        string $page,
+        string $search = '',
+        string $from = '',
+        string $to = '',
+        string $status = ''
+    ): array {
         $params = ['page' => $page];
         if (!empty($search)) {
             $params['search'] = $search;
@@ -42,7 +47,22 @@ class ChargeService
 
     public function createCharge(array $data): array
     {
-        $requiredFields = ['document', 'name', 'email', 'gender', 'birth_date', 'address', 'number_address', 'district', 'city', 'state', 'country', 'phone', 'type'];
+        $requiredFields = [
+            'document',
+            'name',
+            'email',
+            'gender',
+            'birth_date',
+            'address',
+            'number_address',
+            'district',
+            'city',
+            'state',
+            'country',
+            'phone',
+            'type'
+        ];
+
         foreach ($requiredFields as $field) {
             if (empty($data[$field])) {
                 return ['success' => false, 'message' => "Field '$field' is required"];
@@ -52,7 +72,14 @@ class ChargeService
         // Additional validation based on charge type
         switch ($data['type']) {
             case 'u':
-                $singleChargeFields = ['leverage_days_single', 'leverage_min_percent_single', 'description_single_charge', 'amount', 'due_date_single_charge'];
+                $singleChargeFields = [
+                    'leverage_days_single',
+                    'leverage_min_percent_single',
+                    'description_single_charge',
+                    'amount',
+                    'due_date_single_charge'
+                ];
+
                 foreach ($singleChargeFields as $field) {
                     if (empty($data[$field])) {
                         return ['success' => false, 'message' => "Field '$field' is required for single charge"];
@@ -60,7 +87,15 @@ class ChargeService
                 }
                 break;
             case 'p':
-                $installmentFields = ['description_installment_amount', 'recurrence_interval_installment', 'due_date_installment_billing', 'expiration_day_installments', 'total_installment', 'installment_amount'];
+                $installmentFields = [
+                    'description_installment_amount',
+                    'recurrence_interval_installment',
+                    'due_date_installment_billing',
+                    'expiration_day_installments',
+                    'total_installment',
+                    'installment_amount'
+                ];
+
                 foreach ($installmentFields as $field) {
                     if (empty($data[$field])) {
                         return ['success' => false, 'message' => "Field '$field' is required for installment charge"];
@@ -68,7 +103,14 @@ class ChargeService
                 }
                 break;
             case 'r':
-                $recurrenceFields = ['description_recurrence', 'recurrence_interval', 'due_date_recurrence', 'expiration_day_recurrence', 'amount_recurrence'];
+                $recurrenceFields = [
+                    'description_recurrence',
+                    'recurrence_interval',
+                    'due_date_recurrence',
+                    'expiration_day_recurrence',
+                    'amount_recurrence'
+                ];
+
                 foreach ($recurrenceFields as $field) {
                     if (empty($data[$field])) {
                         return ['success' => false, 'message' => "Field '$field' is required for recurrence charge"];
