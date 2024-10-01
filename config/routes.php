@@ -6,10 +6,18 @@ use App\Controller\AuditController;
 use App\Controller\ClientController;
 use App\Controller\ChargeController;
 use App\Controller\PaymentController;
+use App\Handler\WebhookHandler;
 use App\Middleware\AuthenticationMiddleware;
 use Slim\App;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 return function (App $app) {
+    // Webhook route (unprotected)
+    $app->post('/webhook', function (Request $request, Response $response, WebhookHandler $handler) {
+        return $handler->handle($request);
+    });
+    
     // Protected routes group
     $app->group('', function ($app) {
         // Client routes

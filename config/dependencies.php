@@ -9,10 +9,13 @@ use App\Service\ClientService;
 use App\Service\ChargeService;
 use App\Service\PaymentService;
 use App\Service\WebhookProcessor;
+use App\Handler\WebhookHandler;
 use GuzzleHttp\Client as HttpClient;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Slim\Psr7\Factory\ResponseFactory;
 
 return [
     Logger::class => function (ContainerInterface $c) {
@@ -60,10 +63,25 @@ return [
         );
     },
 
+    ResponseFactoryInterface::class => function () {
+        return new ResponseFactory();
+    },
+
     WebhookProcessor::class => function (ContainerInterface $c) {
         return new WebhookProcessor(
-            $c->get(SplitpagApi::class),
-            $c->get(Logger::class)
+            $c->get(Logger::class),
+            $c->get(ClientService::class),
+            $c->get(ChargeService::class),
+            $c->get(PaymentService::class)
+        );
+    },
+
+    WebhookHandler::class => function (ContainerInterface $c) {
+        return new WebhookHandler(
+            $c->get(AuthenticationService::class),
+            $c->get(WebhookProcessor::class),
+            $c->get(Logger::class),
+            $c->get(ResponseFactoryInterface::class)
         );
     },
 ];
